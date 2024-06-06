@@ -47,6 +47,7 @@ def calculate_glcm_features(glcm):
     energy = 0
     correlation = 0
     asm = 0
+    entropy = 0  # Inisialisasi fitur entropy
     mean_i = np.mean(glcm, axis=0)
     mean_j = np.mean(glcm, axis=1)
     std_i = np.std(glcm, axis=0)
@@ -60,6 +61,8 @@ def calculate_glcm_features(glcm):
             homogeneity += glcm[i, j] / (1 + (i - j) ** 2)
             energy += glcm[i, j] ** 2
             asm += glcm[i, j] ** 2
+            if glcm[i, j] > 0:
+                entropy -= glcm[i, j] * np.log2(glcm[i, j])  # Menghitung entropy
             if std_i[i] * std_j[j] > 0:
                 correlation += ((i - mean_i[i]) * (j - mean_j[j]) * glcm[i, j]) / (std_i[i] * std_j[j])
     
@@ -69,7 +72,8 @@ def calculate_glcm_features(glcm):
         'homogeneity': homogeneity,
         'energy': energy,
         'correlation': correlation,
-        'asm': asm
+        'asm': asm,
+        'entropy': entropy  # Menambahkan fitur entropy ke dalam dictionary
     }
     
     return features
@@ -85,3 +89,12 @@ if __name__ == "__main__":
     
     # Memuat gambar
     image = load_image(file_path)
+    
+    # Menghitung GLCM
+    glcm = calculate_glcm(image)
+    
+    # Menghitung fitur GLCM
+    features = calculate_glcm_features(glcm)
+    
+    # Mencetak fitur GLCM
+    print_features(features)
