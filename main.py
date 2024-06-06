@@ -85,3 +85,12 @@ if __name__ == "__main__":
     
     # Memuat gambar
     image = load_image(file_path)
+    
+    # Menghitung GLCM
+    glcm = calculate_glcm(image)
+    
+    # Menghitung fitur GLCM
+    features = calculate_glcm_features(glcm)
+    
+    # Mencetak fitur GLCM
+    print_features(features)
